@@ -1,18 +1,20 @@
-/bin/
-/obj/
-
-/go.sum
-/go.mod
-
 .env
 
 .idea/
+.vscode/
+*.swp
+*.swo
+
+bin/
+dist/
+*.exe
+*.out
+*.test
+
+/go/pkg/
+/go/bin/
 
 *.log
-
-*.docker
-
 *.tmp
-*.swp
 
-*.test
+vendor/
