@@ -126,7 +126,6 @@ func TestUserRepository_UpdateUserByID(t *testing.T) {
 	assert.Equal(t, "New User", updatedUser.Name)
 	assert.Equal(t, "new@example.com", updatedUser.Email)
 
-	// обновляем несуществующего юзера
 	err = repo.UpdateUserByID(context.Background(), 999, updateUser)
 	assert.Equal(t, ErrUserNotFound, err)
 
