@@ -9,7 +9,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 	"strings"
 	"testing"
-	"testovoe/internal/models"
+	"testovoe/internal/domain"
 	"time"
 )
 
@@ -67,19 +67,19 @@ func TestUserRepository_CreateUser(t *testing.T) {
 
 	repo := NewUserRepository(pool)
 
-	user := &models.User{Name: "Test User", Email: "test@example.com"}
+	user := &domain.User{Name: "Test User", Email: "test@example.com"}
 	err := repo.CreateUser(context.Background(), user)
 	assert.NoError(t, err)
 	assert.NotZero(t, user.ID)
 
-	var createdUser models.User
+	var createdUser domain.User
 	err = pool.QueryRow(context.Background(), "SELECT id, name, email FROM users WHERE id = $1", user.ID).
 		Scan(&createdUser.ID, &createdUser.Name, &createdUser.Email)
 	assert.NoError(t, err)
 	assert.Equal(t, user.Name, createdUser.Name)
 	assert.Equal(t, user.Email, createdUser.Email)
 
-	duplicateUser := &models.User{Name: "Another User", Email: "test@example.com"}
+	duplicateUser := &domain.User{Name: "Another User", Email: "test@example.com"}
 	err = repo.CreateUser(context.Background(), duplicateUser)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "duplicate key value violates unique constraint")
@@ -115,11 +115,11 @@ func TestUserRepository_UpdateUserByID(t *testing.T) {
 	err := pool.QueryRow(context.Background(), "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id", "Old User", "old@example.com").Scan(&userID)
 	assert.NoError(t, err)
 
-	updateUser := &models.User{Name: "New User", Email: "new@example.com"}
+	updateUser := &domain.User{Name: "New User", Email: "new@example.com"}
 	err = repo.UpdateUserByID(context.Background(), userID, updateUser)
 	assert.NoError(t, err)
 
-	var updatedUser models.User
+	var updatedUser domain.User
 	err = pool.QueryRow(context.Background(), "SELECT id, name, email FROM users WHERE id = $1", userID).
 		Scan(&updatedUser.ID, &updatedUser.Name, &updatedUser.Email)
 	assert.NoError(t, err)
@@ -131,7 +131,7 @@ func TestUserRepository_UpdateUserByID(t *testing.T) {
 
 	_, err = pool.Exec(context.Background(), "INSERT INTO users (name, email) VALUES ($1, $2)", "Another User", "another@example.com")
 	assert.NoError(t, err)
-	err = repo.UpdateUserByID(context.Background(), userID, &models.User{Name: "New User", Email: "another@example.com"})
+	err = repo.UpdateUserByID(context.Background(), userID, &domain.User{Name: "New User", Email: "another@example.com"})
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "duplicate key value violates unique constraint")
 }
@@ -163,13 +163,13 @@ func TestUserRepository_CreateUser_LongFields(t *testing.T) {
 	repo := NewUserRepository(pool)
 
 	longName := strings.Repeat("a", 101)
-	user := &models.User{Name: longName, Email: "test@example.com"}
+	user := &domain.User{Name: longName, Email: "test@example.com"}
 	err := repo.CreateUser(context.Background(), user)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "value too long for type character varying(100)")
 
 	longEmail := strings.Repeat("b", 101) + "@example.com"
-	user = &models.User{Name: "Test User", Email: longEmail}
+	user = &domain.User{Name: "Test User", Email: longEmail}
 	err = repo.CreateUser(context.Background(), user)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "value too long for type character varying(100)")

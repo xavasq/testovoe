@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
-	"testovoe/internal/models"
+	"testovoe/internal/domain"
 	"testovoe/internal/repository"
 )
 
@@ -13,17 +13,17 @@ type MockUserRepository struct {
 	mock.Mock
 }
 
-func (m *MockUserRepository) CreateUser(ctx context.Context, user *models.User) error {
+func (m *MockUserRepository) CreateUser(ctx context.Context, user *domain.User) error {
 	args := m.Called(ctx, user)
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) GetUserByID(ctx context.Context, id int64) (*models.User, error) {
+func (m *MockUserRepository) GetUserByID(ctx context.Context, id int64) (*domain.User, error) {
 	args := m.Called(ctx, id)
-	return args.Get(0).(*models.User), args.Error(1)
+	return args.Get(0).(*domain.User), args.Error(1)
 }
 
-func (m *MockUserRepository) UpdateUserByID(ctx context.Context, id int64, user *models.User) error {
+func (m *MockUserRepository) UpdateUserByID(ctx context.Context, id int64, user *domain.User) error {
 	args := m.Called(ctx, id, user)
 	return args.Error(0)
 }
@@ -37,7 +37,7 @@ func TestCreateUser_Success(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	user := &models.User{Name: "Test User", Email: "test@example.com"}
+	user := &domain.User{Name: "Test User", Email: "test@example.com"}
 	mockRepo.On("CreateUser", mock.Anything, user).Return(nil)
 
 	err := service.CreateUser(context.Background(), user)
@@ -49,11 +49,11 @@ func TestCreateUser_EmptyFields(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	user := &models.User{Name: "", Email: "test@example.com"}
+	user := &domain.User{Name: "", Email: "test@example.com"}
 	err := service.CreateUser(context.Background(), user)
 	assert.Equal(t, ErrEmptyFields, err)
 
-	user = &models.User{Name: "Test User", Email: ""}
+	user = &domain.User{Name: "Test User", Email: ""}
 	err = service.CreateUser(context.Background(), user)
 	assert.Equal(t, ErrEmptyFields, err)
 
@@ -64,7 +64,7 @@ func TestGetUserByID_Success(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	expectedUser := &models.User{ID: 1, Name: "Test User", Email: "test@example.com"}
+	expectedUser := &domain.User{ID: 1, Name: "Test User", Email: "test@example.com"}
 	mockRepo.On("GetUserByID", mock.Anything, int64(1)).Return(expectedUser, nil)
 
 	user, err := service.GetUserByID(context.Background(), 1)
@@ -77,7 +77,7 @@ func TestGetUserByID_NotFound(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	mockRepo.On("GetUserByID", mock.Anything, int64(1)).Return((*models.User)(nil), repository.ErrUserNotFound)
+	mockRepo.On("GetUserByID", mock.Anything, int64(1)).Return((*domain.User)(nil), repository.ErrUserNotFound)
 
 	user, err := service.GetUserByID(context.Background(), 1)
 	assert.Equal(t, repository.ErrUserNotFound, err)
@@ -89,7 +89,7 @@ func TestUpdateUserByID_Success(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	user := &models.User{Name: "Updated User", Email: "updated@example.com"}
+	user := &domain.User{Name: "Updated User", Email: "updated@example.com"}
 	mockRepo.On("UpdateUserByID", mock.Anything, int64(1), user).Return(nil)
 
 	err := service.UpdateUserByID(context.Background(), 1, user)
@@ -101,11 +101,11 @@ func TestUpdateUserByID_EmptyFields(t *testing.T) {
 	mockRepo := new(MockUserRepository)
 	service := NewUserService(mockRepo)
 
-	user := &models.User{Name: "", Email: "updated@example.com"}
+	user := &domain.User{Name: "", Email: "updated@example.com"}
 	err := service.UpdateUserByID(context.Background(), 1, user)
 	assert.Equal(t, ErrEmptyFields, err)
 
-	user = &models.User{Name: "Updated User", Email: ""}
+	user = &domain.User{Name: "Updated User", Email: ""}
 	err = service.UpdateUserByID(context.Background(), 1, user)
 	assert.Equal(t, ErrEmptyFields, err)
 

@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-	"testovoe/internal/models"
+	"testovoe/internal/domain"
 	"testovoe/internal/service"
 )
 
@@ -18,7 +18,7 @@ func NewUserHandler(service service.UserServiceInterface) *UserHandler {
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
-	var user models.User
+	var user domain.User
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "некорректные данные"})
@@ -56,7 +56,7 @@ func (h *UserHandler) UpdateUserByID(c *gin.Context) {
 		return
 	}
 
-	var updateUser models.User
+	var updateUser domain.User
 	if err := c.ShouldBindJSON(&updateUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "некорректные данные"})
 		return
