@@ -41,7 +41,6 @@ func setupTestDB(t *testing.T) (*pgxpool.Pool, func()) {
 	if err != nil {
 		t.Fatalf("не удалось подключиться к базе: %v", err)
 	}
-
 	_, err = pool.Exec(ctx, `
 		CREATE TABLE users (
 			id BIGSERIAL PRIMARY KEY,
