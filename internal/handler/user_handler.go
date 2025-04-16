@@ -29,7 +29,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "ошибка при создании пользователя"})
 		return
 	}
-
 	c.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
