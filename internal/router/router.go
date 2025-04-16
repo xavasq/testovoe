@@ -7,7 +7,6 @@ import (
 
 func SetupRouter(userHandler *handler.UserHandler) *gin.Engine {
 	r := gin.Default()
-
 	api := r.Group("/users")
 	{
 		api.POST("/", userHandler.CreateUser)
