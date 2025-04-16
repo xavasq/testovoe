@@ -46,7 +46,6 @@ func setupRouter(h *UserHandler) *gin.Engine {
 	r.PUT("/users/:id", h.UpdateUserByID)
 	return r
 }
-
 func TestCreateUser(t *testing.T) {
 	mockService := new(MockUserService)
 	handler := NewUserHandler(mockService)
