@@ -106,3 +106,4 @@ PostgreSQL (порт 5432)
 ├── Dockerfile               # Dockerfile для сборки образа
 ├── go.mod                   # Модули Go
 └── README.md                # Документация
+
