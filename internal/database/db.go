@@ -12,7 +12,6 @@ var DB *pgxpool.Pool
 
 func ConnectDB() {
 	cfg := config.LoadEnv()
-
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
 	pool, err := pgxpool.New(context.Background(), dsn)
