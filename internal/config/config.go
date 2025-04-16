@@ -18,6 +18,7 @@ func LoadEnv() *Config {
 	if err := godotenv.Load("./.env"); err != nil {
 		log.Fatalf("ошибка при загрузке .env файла: %v", err)
 	}
+
 	return &Config{
 		DBUser:     os.Getenv("DB_USER"),
 		DBPassword: os.Getenv("DB_PASSWORD"),
