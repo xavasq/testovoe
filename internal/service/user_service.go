@@ -41,7 +41,6 @@ func (s *UserService) UpdateUserByID(ctx context.Context, id int64, user *domain
 	if user.Name == "" || user.Email == "" {
 		return ErrEmptyFields
 	}
-
 	return s.repo.UpdateUserByID(ctx, id, user)
 }
 
