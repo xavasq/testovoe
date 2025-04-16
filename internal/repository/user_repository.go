@@ -71,3 +71,4 @@ func (r *UserRepository) DeleteUserByID(ctx context.Context, id int64) error {
 	}
 	return nil
 }
+
