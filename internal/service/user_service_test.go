@@ -91,7 +91,6 @@ func TestUpdateUserByID_Success(t *testing.T) {
 
 	user := &domain.User{Name: "Updated User", Email: "updated@example.com"}
 	mockRepo.On("UpdateUserByID", mock.Anything, int64(1), user).Return(nil)
-
 	err := service.UpdateUserByID(context.Background(), 1, user)
 	assert.NoError(t, err)
 	mockRepo.AssertExpectations(t)
