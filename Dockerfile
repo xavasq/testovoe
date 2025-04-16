@@ -20,7 +20,6 @@ RUN wget https://github.com/golang-migrate/migrate/releases/download/v4.17.0/mig
     && rm /tmp/migrate.tar.gz
 
 WORKDIR /root/
-
 COPY --from=builder /app/main .
 COPY --from=builder /app/db/migrations ./db/migrations
 COPY --from=builder /app/.env .
