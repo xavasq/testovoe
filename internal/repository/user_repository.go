@@ -28,7 +28,6 @@ func NewUserRepository(db *pgxpool.Pool) *UserRepository {
 
 func (r *UserRepository) CreateUser(ctx context.Context, user *domain.User) error {
 	query := "INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id"
-
 	if err := r.db.QueryRow(ctx, query, user.Name, user.Email).Scan(&user.ID); err != nil {
 		return fmt.Errorf("ошибка при создании пользователя: %w", err)
 	}
@@ -71,4 +70,3 @@ func (r *UserRepository) DeleteUserByID(ctx context.Context, id int64) error {
 	}
 	return nil
 }
-
